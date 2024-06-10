@@ -14,13 +14,13 @@ def get_format(size: str):
     size = size.lower()
     if size in fpdf.fpdf.PAGE_FORMATS:
         return fpdf.fpdf.PAGE_FORMATS[size]
-    return tuple(float(x.strip()) for x in size.split("x", 1))
+    return tuple(72 * float(x.strip()) for x in size.split("x", 1))
 
 
 def get_cover_pages(size, cover):
     format = get_format(size)
     print(f"format is {format}")
-    pdf = fpdf.FPDF(format=format, unit="in")
+    pdf = fpdf.FPDF(format=format, unit="pt")
     pdf.set_margin(0)
     pdf.add_page()
     pdf.image(cover, h=pdf.eph, w=pdf.epw)
