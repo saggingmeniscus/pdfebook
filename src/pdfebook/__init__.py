@@ -19,7 +19,6 @@ def get_format(size: str):
 
 def get_cover_pages(size, cover):
     format = get_format(size)
-    print(f"format is {format}")
     pdf = fpdf.FPDF(format=format, unit="pt")
     pdf.set_margin(0)
     pdf.add_page()
