@@ -1,0 +1,34 @@
+[project]
+name = "pdfebook"
+version = "0.1.0"
+description = "A tool to produce a PDF ebook from an cover image and interior PDF"
+authors = [
+    { name = "Jacob Smullyan", email = "smulloni@saggingmeniscus.com" }
+]
+dependencies = [
+    "pypdf>=4.2.0",
+    "click>=8.1.7",
+    "fpdf2>=2.7.9",
+]
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "black>=24.4.2",
+    "ipython>=8.25.0",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pdfebook"]
+
+[project.scripts]
+pdfebook = 'pdfebook:run'
