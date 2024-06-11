@@ -10,5 +10,5 @@ pdfebook --size A5 \
     --interior interior.pdf \
     --author "An Author" \
     --title "Title of Book"
-    --outfile ebook.pdf \
+    --outfile ebook.pdf
 ```
