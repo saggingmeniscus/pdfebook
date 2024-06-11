@@ -16,14 +16,17 @@ def get_format(size: str):
     return tuple(72 * float(x.strip()) for x in size.split("x", 1))
 
 
-def get_cover_pages(size, cover):
-    format = get_format(size)
+def get_cover_pages(format, cover, is_back=False):
     pdf = fpdf.FPDF(format=format, unit="pt")
     pdf.set_margin(0)
+    # We add a blank page either before (in the case of a back cover)
+    # or after (in the case of the front)
+    if is_back:
+        pdf.add_page
     pdf.add_page()
     pdf.image(cover, h=pdf.eph, w=pdf.epw)
-    # add blank page
-    pdf.add_page()
+    if not is_back:
+        pdf.add_page()
     return io.BytesIO(pdf.output())
 
 
@@ -60,17 +63,26 @@ def get_cover_pages(size, cover):
     help="Path to PDF of interior",
 )
 @click.option(
+    "-b",
+    "--back",
+    default=None,
+    type=click.Path(exists=True),
+    help="Path to back cover image file",
+)
+@click.option(
     "-o",
     "--outfile",
     required=True,
     type=click.Path(),
     help="Path to generated output",
 )
-def run(title, author, size, cover, interior, outfile):
-    buffer = get_cover_pages(size, cover)
+def run(title, author, size, cover, interior, back, outfile):
+    format = get_format(size)
     writer = pypdf.PdfWriter()
-    writer.append(buffer)
+    writer.append(get_cover_pages(format, cover))
     writer.append(interior)
+    if back:
+        writer.append(get_cover_pages(format, back, is_back=False))
     writer.add_metadata({"/Author": author, "/Title": title})
     writer.write(outfile)
 
