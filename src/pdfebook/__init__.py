@@ -1,8 +1,13 @@
 """
 Script to convert an interior PDF plus cover image file to a PDF ebook.
+May also include an EPUB file to create a ZIP archive with both EPUB and PDF.
 """
 
 import io
+import re
+import tempfile
+import unicodedata
+import zipfile
 
 import click
 import fpdf
@@ -28,6 +33,16 @@ def get_cover_pages(format, cover, is_back=False):
     if not is_back:
         pdf.add_page()
     return io.BytesIO(pdf.output())
+
+
+def get_slug(title):
+    title = (
+        unicodedata.normalize("NFKD", str(title))
+        .encode("ascii", "ignore")
+        .decode("ascii")
+    )
+    title = re.sub(r"[^\w\s-]", "", title.lower())
+    return re.sub(r"[-\s]+", "_", title).strip("-_")
 
 
 @click.command()
@@ -69,6 +84,7 @@ def get_cover_pages(format, cover, is_back=False):
     type=click.Path(exists=True),
     help="Path to back cover image file",
 )
+@click.option("-p", "--epub", type=click.Path(exists=True), help="Path to epub file")
 @click.option(
     "-o",
     "--outfile",
@@ -76,7 +92,7 @@ def get_cover_pages(format, cover, is_back=False):
     type=click.Path(),
     help="Path to generated output",
 )
-def run(title, author, size, cover, interior, back, outfile):
+def run(title, author, size, cover, interior, back, epub, outfile):
     format = get_format(size)
     writer = pypdf.PdfWriter()
     writer.append(get_cover_pages(format, cover))
@@ -84,7 +100,16 @@ def run(title, author, size, cover, interior, back, outfile):
     if back:
         writer.append(get_cover_pages(format, back, is_back=False))
     writer.add_metadata({"/Author": author, "/Title": title})
-    writer.write(outfile)
+    if epub:
+        slug = get_slug(title)
+        with zipfile.ZipFile(outfile, "w") as archive:
+            archive.mkdir(slug)
+            archive.write(epub, arcname=f"{slug}/{slug}.epub")
+            with io.BytesIO() as buffer:
+                writer.write(buffer)
+                archive.writestr(f"{slug}/{slug}.pdf", buffer.getvalue())
+    else:
+        writer.write(outfile)
 
 
 if __name__ == "__main__":
