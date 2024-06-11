@@ -2,7 +2,6 @@
 Script to convert an interior PDF plus cover image file to a PDF ebook.
 """
 
-import datetime
 import io
 
 import click
