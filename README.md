@@ -10,11 +10,23 @@ pdfebook --size A5 \
     --cover cover.jpg \
     --interior interior.pdf \
     --author "An Author" \
-    --title "Title of Book"
+    --title "Title of Book" \
     --outfile ebook.pdf
 ```
 
-Or, if you have an EPUB, to create a ZIP file with both formats:
+You can include a back cover, too:
+
+```bash
+pdfebook --size A5 \
+    --cover cover.jpg \
+    --interior interior.pdf \
+    --author "An Author" \
+    --title "Title of Book" \
+    --back back_cover.jpg \
+    --outfile ebook.pdf
+```
+
+Or, if you have an EPUB, you can create a ZIP file with both formats:
 
 ```bash
 pdfebook --size 5.5x8.5 \
