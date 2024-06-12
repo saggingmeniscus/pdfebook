@@ -6,7 +6,7 @@ or a ZIP archive containing a PDF ebook and an EPUB.
 Usage to produce just a PDF:
 
 ```bash
-pdfebook --size A5 \
+pdfebook \
     --cover cover.jpg \
     --interior interior.pdf \
     --author "An Author" \
@@ -17,7 +17,7 @@ pdfebook --size A5 \
 You can include a back cover, too:
 
 ```bash
-pdfebook --size A5 \
+pdfebook \
     --cover cover.jpg \
     --interior interior.pdf \
     --author "An Author" \
@@ -29,7 +29,7 @@ pdfebook --size A5 \
 Or, if you have an EPUB, you can create a ZIP file with both formats:
 
 ```bash
-pdfebook --size 5.5x8.5 \
+pdfebook \
     --cover cover.jpg \
     --interior interior.jpg \
     --author "Quite N. Author" \

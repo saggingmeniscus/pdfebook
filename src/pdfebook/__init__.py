@@ -21,6 +21,12 @@ def get_format(size: str):
     return tuple(72 * float(x.strip()) for x in size.split("x", 1))
 
 
+def get_format_from_pdf(pdf: str):
+    reader = pypdf.PdfReader(pdf)
+    first_page = reader.pages[0]
+    return tuple(first_page.mediabox[2:])
+
+
 def get_cover_pages(format, cover, is_back=False):
     pdf = fpdf.FPDF(format=format, unit="pt")
     pdf.set_margin(0)
@@ -54,16 +60,6 @@ def get_slug(title):
     help="Author(s) of book",
 )
 @click.option(
-    "-s",
-    "--size",
-    default="A5",
-    help=(
-        "Trim size of book: either a format name like 'A3', 'A4', 'A5', 'letter', "
-        "or 'legal', or dimensions in inches formatted '<width>x<height>', e.g., '7x10' "
-        "or '5.5x8.5' [default: 'A5']"
-    ),
-)
-@click.option(
     "-c",
     "--cover",
     required=True,
@@ -78,6 +74,13 @@ def get_slug(title):
     help="Path to PDF of interior",
 )
 @click.option(
+    "-o",
+    "--outfile",
+    required=True,
+    type=click.Path(),
+    help="Path to generated output",
+)
+@click.option(
     "-b",
     "--back",
     default=None,
@@ -86,14 +89,20 @@ def get_slug(title):
 )
 @click.option("-p", "--epub", type=click.Path(exists=True), help="Path to epub file")
 @click.option(
-    "-o",
-    "--outfile",
-    required=True,
-    type=click.Path(),
-    help="Path to generated output",
+    "-s",
+    "--size",
+    default=None,
+    help=(
+        "Trim size of book: either a format name like 'A3', 'A4', 'A5', 'letter', "
+        "or 'legal', or dimensions in inches formatted '<width>x<height>', e.g., '7x10' "
+        "or '5.5x8.5' [default: inferred]"
+    ),
 )
-def run(title, author, size, cover, interior, back, epub, outfile):
-    format = get_format(size)
+def run(title, author, cover, interior, outfile, epub=None, back=None, size=None):
+    if size is None:
+        format = get_format_from_pdf(interior)
+    else:
+        format = get_format(size)
     writer = pypdf.PdfWriter()
     writer.append(get_cover_pages(format, cover))
     writer.append(interior)
