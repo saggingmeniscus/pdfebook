@@ -3,7 +3,17 @@
 A tool to produce a PDF ebook from a cover image and interior PDF,
 or a ZIP archive containing a PDF ebook and an EPUB.
 
-Usage to produce just a PDF:
+## Installation
+
+Python 3.12 or better is expected.
+
+```bash
+pip install pdfebook
+```
+
+## Usage
+
+To produce just a PDF:
 
 ```bash
 pdfebook \
