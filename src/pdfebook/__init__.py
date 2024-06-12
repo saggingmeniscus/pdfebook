@@ -3,6 +3,8 @@ Script to convert an interior PDF plus cover image file to a PDF ebook.
 May also include an EPUB file to create a ZIP archive with both EPUB and PDF.
 """
 
+import functools
+import importlib.metadata
 import io
 import re
 import tempfile
@@ -12,6 +14,22 @@ import zipfile
 import click
 import fpdf
 import pypdf
+
+
+__version__ = importlib.metadata.version("pdfebook")
+
+__doc__ = f"""\
+    pdfebook creates a PDF ebook from an interior PDF and a book cover image file.
+    It can also produce a zip archive containing both an EPUB and PDF.
+    
+    version: {__version__}
+    """
+    
+def assign_docstring(docstring):
+    def decorator(func):
+        func.__doc__ = docstring
+        return func
+    return decorator
 
 
 def get_format(size: str):
@@ -98,6 +116,7 @@ def get_slug(title):
         "or '5.5x8.5' [default: inferred]"
     ),
 )
+@assign_docstring(__doc__)
 def run(title, author, cover, interior, outfile, epub=None, back=None, size=None):
     if size is None:
         format = get_format_from_pdf(interior)
@@ -120,6 +139,8 @@ def run(title, author, cover, interior, outfile, epub=None, back=None, size=None
     else:
         writer.write(outfile)
 
+
+run.__doc__ = __doc__
 
 if __name__ == "__main__":
     run()
