@@ -24,11 +24,13 @@ __doc__ = f"""\
     
     version: {__version__}
     """
-    
+
+
 def assign_docstring(docstring):
     def decorator(func):
         func.__doc__ = docstring
         return func
+
     return decorator
 
 
@@ -139,8 +141,6 @@ def run(title, author, cover, interior, outfile, epub=None, back=None, size=None
     else:
         writer.write(outfile)
 
-
-run.__doc__ = __doc__
 
 if __name__ == "__main__":
     run()
