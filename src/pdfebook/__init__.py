@@ -53,7 +53,7 @@ def get_cover_pages(format, cover, is_back=False):
     # We add a blank page either before (in the case of a back cover)
     # or after (in the case of the front)
     if is_back:
-        pdf.add_page
+        pdf.add_page()
     pdf.add_page()
     pdf.image(cover, h=pdf.eph, w=pdf.epw)
     if not is_back:
@@ -128,7 +128,7 @@ def run(title, author, cover, interior, outfile, epub=None, back=None, size=None
     writer.append(get_cover_pages(format, cover))
     writer.append(interior)
     if back:
-        writer.append(get_cover_pages(format, back, is_back=False))
+        writer.append(get_cover_pages(format, back, is_back=True))
     writer.add_metadata({"/Author": author, "/Title": title})
     if epub:
         slug = get_slug(title)
