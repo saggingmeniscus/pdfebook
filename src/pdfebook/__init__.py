@@ -132,7 +132,7 @@ def run(title, author, cover, interior, outfile, epub=None, back=None, size=None
     writer.add_metadata({"/Author": author, "/Title": title})
     if epub:
         slug = get_slug(title)
-        with zipfile.ZipFile(outfile, "w") as archive:
+        with zipfile.ZipFile(outfile, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             archive.mkdir(slug)
             archive.write(epub, arcname=f"{slug}/{slug}.epub")
             with io.BytesIO() as buffer:
