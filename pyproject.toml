@@ -1,6 +1,6 @@
 [project]
 name = "pdfebook"
-version = "0.1.3"
+version = "0.1.4"
 description = "A tool to produce a PDF ebook from an cover image and interior PDF"
 authors = [
     { name = "Jacob Smullyan", email = "smulloni@saggingmeniscus.com" }
