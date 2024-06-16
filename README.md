@@ -42,6 +42,7 @@ Or, if you have an EPUB, you can create a ZIP file with both formats:
 pdfebook \
     --cover cover.jpg \
     --interior interior.jpg \
+    --epub that_book.epub \
     --author "Quite N. Author" \
     --title "That Book" \
     --outfile "that_book.zip"
